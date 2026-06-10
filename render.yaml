@@ -1,0 +1,25 @@
+# Render Blueprint — Phia demo mock API
+# Deploy: connect this repo in Render Dashboard → New Blueprint
+services:
+  - type: web
+    name: phia-demo-api
+    runtime: node
+    rootDir: api
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FEED_PAGE_SIZE
+        value: "24"
+      - key: DELAY_TRENDING_MS
+        value: "900"
+      - key: DELAY_BRANDS_MS
+        value: "700"
+      - key: DELAY_FEED_MS
+        value: "1100"
+      - key: DELAY_HOME_BUNDLE_MS
+        value: "1200"
+      - key: DELAY_JITTER_MS
+        value: "400"
