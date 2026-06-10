@@ -8,8 +8,10 @@ import { feedRouter } from "./routes/feed.js";
 import { healthRouter } from "./routes/health.js";
 import { homeRouter } from "./routes/home.js";
 import { CatalogService } from "./services/catalogService.js";
+import { FeedSessionService } from "./services/feedSessionService.js";
 
 const catalog = new CatalogService();
+const feedSessions = new FeedSessionService(catalog.allProducts);
 const app = express();
 
 app.disable("x-powered-by");
@@ -21,7 +23,7 @@ app.use(requestId);
 
 app.use(healthRouter(catalog));
 app.use(homeRouter(catalog));
-app.use(feedRouter(catalog));
+app.use(feedRouter(catalog, feedSessions));
 
 app.use((_req, res) => {
   res.status(404).json({

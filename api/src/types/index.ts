@@ -29,6 +29,7 @@ export interface PageMeta {
   limit: number;
   total: number;
   hasMore: boolean;
+  sessionId: string;
 }
 
 export interface ApiEnvelope<T> {

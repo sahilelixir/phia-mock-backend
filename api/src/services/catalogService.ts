@@ -63,33 +63,18 @@ export class CatalogService {
     return this.products.length;
   }
 
-  getTrending(limit = 8): EditorialEditDTO[] {
-    return this.trending.slice(0, limit);
+  get allProducts(): Product[] {
+    return this.products;
   }
 
-  getBrands(limit = 12): BrandSpotlightDTO[] {
-    return this.brands.slice(0, limit);
+  getTrending(limit = 8, shuffle = false): EditorialEditDTO[] {
+    const items = this.trending.slice(0, limit);
+    return shuffle ? shuffleCopy(items) : items;
   }
 
-  getFeedPage(cursor: string | null, limit: number): {
-    items: Product[];
-    offset: number;
-    hasMore: boolean;
-    nextCursor: string | null;
-  } {
-    const offset = cursor ? Number.parseInt(cursor, 10) : 0;
-    const safeOffset = Number.isFinite(offset) && offset >= 0 ? offset : 0;
-    const safeLimit = Math.min(Math.max(limit, 1), config.feedMaxPageSize);
-    const end = Math.min(safeOffset + safeLimit, this.products.length);
-    const items = this.products.slice(safeOffset, end);
-    const hasMore = end < this.products.length;
-
-    return {
-      items,
-      offset: safeOffset,
-      hasMore,
-      nextCursor: hasMore ? String(end) : null,
-    };
+  getBrands(limit = 12, shuffle = false): BrandSpotlightDTO[] {
+    const items = this.brands.slice(0, limit);
+    return shuffle ? shuffleCopy(items) : items;
   }
 
   private buildTrending(limit: number): EditorialEditDTO[] {
@@ -138,4 +123,13 @@ export class CatalogService {
         };
       });
   }
+}
+
+function shuffleCopy<T>(items: T[]): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
 }
